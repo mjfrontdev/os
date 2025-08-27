@@ -9,6 +9,12 @@ dist/
 build/
 out/
 
+# Build scripts (keep in repo but ignore in builds)
+!build-*.js
+!build-*.bat
+!build-*.ps1
+!build-*.sh
+
 # Runtime files
 *.log
 *.pid

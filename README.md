@@ -1,181 +1,171 @@
-# Advanced OS Simulator - شبیه‌ساز سیستم عامل پیشرفته
+# 🖥️ OsMj - Windows 11 Style OS Simulator
 
-A cutting-edge operating system simulator built with Electron, featuring advanced animations, multiple applications, and a beautiful desktop environment.
+A beautiful, modern operating system simulator built with Electron that mimics the Windows 11 experience with advanced features and stunning visuals.
 
-شبیه‌ساز سیستم عامل پیشرفته و مدرن ساخته شده با Electron، شامل انیمیشن‌های پیشرفته، برنامه‌های متعدد و محیط دسکتاپ زیبا.
+## ✨ Version 2.5.0 Features
 
-## ✨ **New Advanced Features - ویژگی‌های پیشرفته جدید**
+- 🎨 **Modern Windows 11-style UI** with glassmorphism effects
+- 🌟 **5 Beautiful Themes**: Dark, Light, Neon, Sunset, Ocean
+- 🔍 **Fully Functional Search System** with real-time results
+- 🎭 **Advanced Animations** using AOS and Bootstrap
+- 📱 **Responsive Design** for all screen sizes
+- 🔧 **Enhanced Customization Panel** with live previews
+- 🌤️ **Improved Weather Widget** with detailed information
+- 🖥️ **Better Window Management** with modern controls
+- 🎯 **Cross-Platform Support** (Windows, macOS, Linux)
 
-### 🎨 **Enhanced Visual Effects - افکت‌های بصری پیشرفته**
-- **Particle System** - سیستم ذرات متحرک
-- **Glassmorphism Effects** - افکت‌های شیشه‌ای
-- **Advanced Animations** - انیمیشن‌های پیشرفته
-- **Theme Switching** - تغییر تم (روشن/تاریک)
-- **Dynamic Wallpapers** - پس‌زمینه‌های پویا
-- **Hover Effects** - افکت‌های شناور
+## 🚀 Quick Start
 
-### 🚀 **New Applications - برنامه‌های جدید**
-- 🎵 **Music Player** - پخش کننده موسیقی
-- 📊 **System Monitor** - مانیتور سیستم
-- 🌤️ **Weather Widget** - ویجت آب و هوا
-- 🖼️ **Wallpaper Gallery** - گالری پس‌زمینه
+### Prerequisites
+- Node.js (v16 or higher)
+- npm (v8 or higher)
 
-### 🎯 **Advanced Interactions - تعاملات پیشرفته**
-- **Multi-Select Icons** - انتخاب چندگانه آیکون‌ها
-- **Context Menus** - منوهای راست کلیک
-- **Keyboard Shortcuts** - کلیدهای میانبر
-- **Drag & Drop** - کشیدن و رها کردن
-- **Icon Selection** - انتخاب آیکون‌ها
-
-### ⚡ **Performance Features - ویژگی‌های عملکرد**
-- **Smooth Transitions** - انتقالات نرم
-- **Hardware Acceleration** - شتاب سخت‌افزاری
-- **Responsive Design** - طراحی واکنش‌گرا
-- **Memory Management** - مدیریت حافظه
-
-## 🎭 **Animation System - سیستم انیمیشن**
-
-### **CSS Animations**
-- `windowOpenAdvanced` - باز شدن پیشرفته پنجره
-- `startPulse` - ضربان دکمه شروع
-- `activeGlow` - درخشش فعال
-- `selectionPulse` - ضربان انتخاب
-- `weatherFloat` - شناور شدن ویجت آب و هوا
-- `particleFloat` - شناور شدن ذرات
-
-### **Transition Effects**
-- **Cubic Bezier** - منحنی‌های نرم
-- **Transform 3D** - تبدیل‌های سه‌بعدی
-- **Backdrop Filter** - فیلتر پس‌زمینه
-- **Box Shadow** - سایه‌های پویا
-
-## 🎨 **Theme System - سیستم تم**
-
-### **Light Theme (Default)**
-- رنگ‌های روشن و شاداب
-- کنتراست بالا برای خوانایی
-- سایه‌های ملایم
-
-### **Dark Theme**
-- رنگ‌های تیره و مدرن
-- کاهش خستگی چشم
-- افکت‌های نئون
-
-## ⌨️ **Keyboard Shortcuts - کلیدهای میانبر**
-
-| کلید | عملکرد |
-|------|--------|
-| `Ctrl + Space` | باز/بسته کردن منوی Start |
-| `Ctrl + W` | بستن پنجره فعال |
-| `Ctrl + D` | نمایش دسکتاپ |
-| `Escape` | بستن منوها |
-| `Ctrl + Click` | انتخاب چندگانه آیکون‌ها |
-
-## 🎵 **Music Player Features - ویژگی‌های پخش کننده موسیقی**
-
-- **Playlist Management** - مدیریت لیست پخش
-- **Progress Bar** - نوار پیشرفت
-- **Playback Controls** - کنترل‌های پخش
-- **Track Information** - اطلاعات آهنگ
-
-## 📊 **System Monitor - مانیتور سیستم**
-
-- **Real-time CPU Usage** - استفاده CPU در زمان واقعی
-- **Memory Monitoring** - نظارت بر حافظه
-- **Disk Usage** - استفاده دیسک
-- **Network Statistics** - آمار شبکه
-- **Process List** - لیست فرآیندها
-
-## 🌤️ **Weather Widget - ویجت آب و هوا**
-
-- **Temperature Display** - نمایش دما
-- **Weather Conditions** - شرایط آب و هوا
-- **Location Info** - اطلاعات مکان
-- **Auto-update** - به‌روزرسانی خودکار
-
-## 🖼️ **Wallpaper Gallery - گالری پس‌زمینه**
-
-- **6 Beautiful Gradients** - 6 گرادیان زیبا
-- **Instant Preview** - پیش‌نمایش فوری
-- **Smooth Transitions** - انتقالات نرم
-- **Easy Selection** - انتخاب آسان
-
-## 🎯 **Context Menu System - سیستم منوی راست کلیک**
-
-- **Open** - باز کردن
-- **Properties** - ویژگی‌ها
-- **Rename** - تغییر نام
-- **Delete** - حذف
-
-## 🚀 **Performance Optimizations - بهینه‌سازی‌های عملکرد**
-
-- **CSS Variables** - متغیرهای CSS
-- **Hardware Acceleration** - شتاب سخت‌افزاری
-- **Efficient Animations** - انیمیشن‌های کارآمد
-- **Memory Management** - مدیریت حافظه
-- **Lazy Loading** - بارگذاری تنبل
-
-## 🎨 **Design Principles - اصول طراحی**
-
-- **Material Design** - طراحی متریال
-- **Glassmorphism** - شیشه‌گرایی
-- **Neumorphism** - نئومورفیسم
-- **Responsive Grid** - شبکه واکنش‌گرا
-- **Accessibility** - دسترسی‌پذیری
-
-## 📱 **Responsive Features - ویژگی‌های واکنش‌گرا**
-
-- **Mobile Optimized** - بهینه‌سازی موبایل
-- **Touch Support** - پشتیبانی از لمس
-- **Adaptive Layout** - طرح‌بندی تطبیقی
-- **Flexible Grid** - شبکه انعطاف‌پذیر
-
-## 🔧 **Technical Improvements - بهبودهای فنی**
-
-- **Modern CSS** - CSS مدرن
-- **ES6+ JavaScript** - JavaScript ES6+
-- **Performance APIs** - API های عملکرد
-- **Memory Optimization** - بهینه‌سازی حافظه
-- **Error Handling** - مدیریت خطا
-
-## 🎉 **What's New - چه چیزهای جدیدی اضافه شده**
-
-### **Version 2.0 Features**
-1. **Particle System** - سیستم ذرات
-2. **Weather Simulation** - شبیه‌سازی آب و هوا
-3. **Theme Switching** - تغییر تم
-4. **Advanced Animations** - انیمیشن‌های پیشرفته
-5. **Context Menus** - منوهای راست کلیک
-6. **Keyboard Shortcuts** - کلیدهای میانبر
-7. **Icon Selection** - انتخاب آیکون
-8. **Wallpaper Gallery** - گالری پس‌زمینه
-9. **Music Player** - پخش کننده موسیقی
-10. **System Monitor** - مانیتور سیستم
-
-## 🚀 **Getting Started - شروع کار**
-
-### **Installation**
+### Installation
 ```bash
+# Clone the repository
+git clone <repository-url>
+cd osmj
+
+# Install dependencies
 npm install
+
+# Start the application
 npm start
 ```
 
-### **Development**
+## 🔧 Build for All Platforms
+
+### Single Command Build
 ```bash
-npm run dev
-npm run build
+# Build for Windows, macOS, and Linux
+npm run build:all
 ```
 
-## 🎯 **Future Roadmap - نقشه راه آینده**
+### Platform-Specific Builds
+```bash
+npm run build:win    # Windows only
+npm run build:mac    # macOS only
+npm run build:linux  # Linux only
+```
 
-- **File System Integration** - یکپارچه‌سازی سیستم فایل
-- **Network Applications** - برنامه‌های شبکه
-- **Gaming Support** - پشتیبانی از بازی
-- **Plugin System** - سیستم افزونه
-- **Cloud Sync** - همگام‌سازی ابری
+### Using Scripts
+- **Windows**: `build-all.bat` or `build-all.ps1`
+- **macOS/Linux**: `./build-all.sh`
+- **Node.js**: `node build-all.js`
+
+For detailed build instructions, see [BUILD-ALL.md](BUILD-ALL.md).
+
+## 🎮 Features
+
+### Desktop Experience
+- **Modern Desktop Icons** with glass effects
+- **Dynamic Wallpapers** with gradient options
+- **Particle Effects** and animated backgrounds
+- **Weather Widget** with real-time updates
+
+### Start Menu
+- **Organized App Categories** (Frequently Used, All Apps)
+- **User Profile Section** with avatar
+- **Quick Actions** (wallpaper, shutdown)
+
+### Applications
+- **File Explorer** with sidebar navigation
+- **Web Browser** with tab support
+- **Calculator** with full functionality
+- **Notepad** with editing tools
+- **Settings** with comprehensive options
+- **Music Player** with playlist support
+- **System Monitor** with real-time stats
+
+### Customization
+- **Theme Switching** with live previews
+- **Animation Speed** control
+- **Blur Intensity** adjustment
+- **Icon Size** customization
+- **Taskbar Height** modification
+- **Window Opacity** settings
+
+## 🎨 Themes
+
+1. **Dark Theme** - Modern dark interface
+2. **Light Theme** - Clean light interface
+3. **Neon Theme** - Cyberpunk neon colors
+4. **Sunset Theme** - Warm sunset palette
+5. **Ocean Theme** - Cool ocean colors
+
+## 🔍 Search System
+
+The search feature provides:
+- **Real-time results** as you type
+- **App discovery** through desktop and start menu
+- **System action search** (settings, wallpaper, etc.)
+- **Keyboard shortcuts** (Enter to execute)
+- **Beautiful results display** with glassmorphism
+
+## 🛠️ Development
+
+### Project Structure
+```
+osmj/
+├── assets/          # Icons and images
+├── dist/            # Build outputs
+├── src/             # Source code
+├── styles.css       # Main stylesheet
+├── renderer.js      # Main application logic
+├── main.js          # Electron main process
+└── package.json     # Project configuration
+```
+
+### Key Technologies
+- **Electron** - Cross-platform desktop framework
+- **HTML5/CSS3** - Modern web technologies
+- **JavaScript ES6+** - Advanced JavaScript features
+- **Bootstrap 5** - UI framework
+- **Font Awesome** - Icon library
+- **AOS** - Animate On Scroll library
+
+## 📱 System Requirements
+
+- **OS**: Windows 10+, macOS 10.14+, Ubuntu 18.04+
+- **RAM**: 2GB minimum, 4GB recommended
+- **Storage**: 100MB available space
+- **Display**: 1024x768 minimum resolution
+
+## 🚀 Performance Features
+
+- **Hardware Acceleration** for smooth animations
+- **Optimized Rendering** with CSS transforms
+- **Efficient Memory Usage** with lazy loading
+- **Responsive Design** for all screen sizes
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Electron** team for the amazing framework
+- **Bootstrap** team for the UI components
+- **Font Awesome** for the beautiful icons
+- **AOS** library for smooth animations
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+- Create an issue on GitHub
+- Check the [BUILD-ALL.md](BUILD-ALL.md) for build help
+- Review the troubleshooting section
 
 ---
 
-**Experience the future of OS simulation!** 🚀✨
+**Made with ❤️ for the open-source community**
 
-**تجربه آینده شبیه‌سازی سیستم عامل!** 🚀✨
+**Version 2.5.0** - The most beautiful OS simulator yet! 🎉

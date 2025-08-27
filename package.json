@@ -1,7 +1,7 @@
 {
-  "name": "os-simulator",
-  "version": "1.0.0",
-  "description": "Operating System Simulator built with Electron",
+  "name": "osmj",
+  "version": "2.5.0",
+  "description": "OsMj - Windows 11 Style OS Simulator built with Electron",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -12,13 +12,17 @@
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
     "build:linux": "electron-builder --linux",
-    "build:all": "electron-builder -mwl"
+    "build:all": "node build-all.js",
+    "build:cross": "electron-builder --win"
   },
   "keywords": [
     "electron",
     "os",
     "simulator",
-    "desktop"
+    "desktop",
+    "osmj",
+    "windows11",
+    "glassmorphism"
   ],
   "author": "Your Name",
   "license": "MIT",
@@ -31,8 +35,8 @@
     "bootstrap": "^5.3.2"
   },
   "build": {
-    "appId": "com.example.os-simulator",
-    "productName": "Advanced OS Simulator",
+    "appId": "com.example.osmj",
+    "productName": "OsMj - Windows 11 Style OS Simulator",
     "directories": {
       "output": "dist"
     },
@@ -41,7 +45,11 @@
       "!node_modules/**/*",
       "!dist/**/*",
       "!.git/**/*",
-      "!*.md"
+      "!*.md",
+      "!build-*.js",
+      "!build-*.bat",
+      "!build-*.ps1",
+      "!build-*.sh"
     ],
     "win": {
       "target": [
@@ -54,15 +62,15 @@
           "arch": ["x64"]
         }
       ],
-      "icon": "assets/icon.ico"
+      "icon": "assets/os1 (1).png"
     },
     "mac": {
       "target": "dmg",
-      "icon": "assets/icon.icns"
+      "icon": "assets/os1 (2).png"
     },
     "linux": {
       "target": "AppImage",
-      "icon": "assets/icon.png"
+      "icon": "assets/os1 (1).png"
     },
     "nsis": {
       "oneClick": false,

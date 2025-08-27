@@ -14,12 +14,15 @@ function createWindow() {
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js')
     },
-    icon: path.join(__dirname, 'assets/icon.png'),
+    icon: path.join(__dirname, 'assets/os1 (1).png'),
     titleBarStyle: 'default',
-    show: false
+    show: false,
+    frame: false,
+    transparent: true
   });
 
-  mainWindow.loadFile('index.html');
+  // Start with splash screen
+  mainWindow.loadFile('splash.html');
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();

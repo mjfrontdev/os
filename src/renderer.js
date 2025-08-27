@@ -7,6 +7,8 @@ class AdvancedOSSimulator {
         this.isWallpaperGalleryOpen = false;
         this.currentTheme = 'light';
         this.selectedIcons = new Set();
+        this.fileSystem = new Map(); // Store files and folders
+        this.currentPath = '/';
         this.init();
     }
 
@@ -19,7 +21,10 @@ class AdvancedOSSimulator {
         this.initCanvas();
         this.initAOS();
         this.loadCustomizationSettings();
-        this.showToast('Welcome to Advanced OS Simulator!', 'success');
+        this.setupThemeSelection();
+        this.setupVoiceAssistant();
+        this.showToast('Welcome to OsMj! 🎉', 'success');
+        this.speakWelcomeMessage();
         this.setupKeyboardShortcuts();
     }
 
@@ -28,6 +33,9 @@ class AdvancedOSSimulator {
         document.getElementById('startBtn').addEventListener('click', () => {
             this.toggleStartMenu();
         });
+
+        // Search functionality
+        this.setupSearch();
 
         // Desktop icons
         document.querySelectorAll('.desktop-icon').forEach(icon => {
@@ -64,6 +72,9 @@ class AdvancedOSSimulator {
                 } else if (action === 'wallpaper-gallery') {
                     this.toggleWallpaperGallery();
                     this.toggleStartMenu();
+                } else if (action === 'voice-assistant') {
+                    this.toggleVoiceAssistant();
+                    this.toggleStartMenu();
                 } else if (appName) {
                     this.openApp(appName);
                     this.toggleStartMenu();
@@ -92,6 +103,14 @@ class AdvancedOSSimulator {
         document.getElementById('customizationToggle').addEventListener('click', () => {
             this.toggleCustomizationPanel();
         });
+
+        // Voice Assistant toggle
+        const voiceAssistantBtn = document.getElementById('voiceAssistantBtn');
+        if (voiceAssistantBtn) {
+            voiceAssistantBtn.addEventListener('click', () => {
+                this.toggleVoiceAssistant();
+            });
+        }
 
         // Customization panel events
         document.getElementById('closeCustomizationPanel').addEventListener('click', () => {
@@ -258,6 +277,7 @@ class AdvancedOSSimulator {
             localStorage.setItem('osWallpaper', wallpaperType);
             
             this.showToast('Wallpaper changed successfully!', 'success');
+            this.speakWithPersonality(`Wallpaper changed to ${wallpaperType}`, 'enthusiastic');
             this.closeWallpaperGallery();
         } else {
             this.showToast('Invalid wallpaper selection', 'error');
@@ -270,10 +290,12 @@ class AdvancedOSSimulator {
             body.setAttribute('data-theme', 'dark');
             this.currentTheme = 'dark';
             this.showToast('Dark theme activated', 'info');
+            this.speakWithPersonality('Theme changed to dark mode', 'professional');
         } else {
             body.removeAttribute('data-theme');
             this.currentTheme = 'light';
             this.showToast('Light theme activated', 'info');
+            this.speakWithPersonality('Theme changed to light mode', 'professional');
         }
         
         // Save theme preference
@@ -287,7 +309,7 @@ class AdvancedOSSimulator {
                 themeToggle.title = 'Switch to Light Theme';
             } else {
                 themeToggle.className = 'fas fa-moon';
-                themeToggle.title = 'Switch to Dark Theme';
+                themeToggle.title = 'Switch to Light Theme';
             }
         }
     }
@@ -570,6 +592,66 @@ class AdvancedOSSimulator {
         this.runningApps.set(appName, appWindow);
         this.addToTaskbar(appName, appWindow);
         this.showToast(`${appName} opened successfully!`, 'info');
+        
+        // Voice feedback with personality
+        const appNames = {
+            'file-explorer': 'File Explorer',
+            'browser': 'Web Browser',
+            'settings': 'System Settings',
+            'notepad': 'Notepad',
+            'calculator': 'Calculator'
+        };
+        const displayName = appNames[appName] || appName;
+        
+        // Random welcome messages for apps
+        const appMessages = [
+            `Opening ${displayName} for you!`,
+            `Let's explore ${displayName} together!`,
+            `${displayName} is ready to serve you!`,
+            `Welcome to ${displayName}!`,
+            `Your ${displayName} is launching!`,
+            `Ready to work with ${displayName}!`,
+            `Let's get started with ${displayName}!`,
+            `${displayName} is now at your service!`,
+            `Time to work with ${displayName}!`,
+            `${displayName} is ready when you are!`,
+            `Let's dive into ${displayName}!`,
+            `${displayName} is here to help you!`,
+            `Your personal ${displayName} is ready!`,
+            `Let's make magic with ${displayName}!`,
+            `Time to unleash the power of ${displayName}!`,
+            `${displayName} is your digital companion!`,
+            `Let's create something amazing with ${displayName}!`,
+            `${displayName} is ready to inspire you!`,
+            `Your ${displayName} adventure begins now!`,
+            `Let's unlock the potential of ${displayName}!`,
+            `Time to experience the magic of ${displayName}!`,
+            `${displayName} is your gateway to creativity!`,
+            `Let's embark on a ${displayName} journey!`,
+            `${displayName} is your digital canvas!`,
+            `Time to discover the wonders of ${displayName}!`,
+            `${displayName} is your innovation hub!`,
+            `Let's transform ideas with ${displayName}!`,
+            `${displayName} is your productivity partner!`,
+            `Time to build something incredible with ${displayName}!`,
+            `${displayName} is your creative sanctuary!`,
+            `Let's make dreams reality with ${displayName}!`,
+            `${displayName} is your success catalyst!`,
+            `Time to create your masterpiece with ${displayName}!`,
+            `${displayName} is your digital destiny!`,
+            `Let's write your story with ${displayName}!`,
+            `${displayName} is your infinite possibility!`,
+            `Time to shape the future with ${displayName}!`,
+            `${displayName} is your ultimate tool!`,
+            `Let's conquer the digital world with ${displayName}!`,
+            `${displayName} is your power unleashed!`,
+            `Time to revolutionize with ${displayName}!`,
+            `${displayName} is your digital revolution!`,
+            `Let's make history with ${displayName}!`,
+            `${displayName} is your legacy builder!`
+        ];
+        const randomMessage = appMessages[Math.floor(Math.random() * appMessages.length)];
+        this.speakWithPersonality(randomMessage, 'enthusiastic');
     }
 
     createAppWindow(appName) {
@@ -660,11 +742,15 @@ class AdvancedOSSimulator {
             ]
         };
 
-        function renderFiles(path) {
-            const files = filesData[path] || [];
+        const renderFiles = (path) => {
+            // Get files from both static data and dynamic file system
+            const staticFiles = filesData[path] || [];
+            const dynamicFiles = this.fileSystem.get(path) || [];
+            const allFiles = [...staticFiles, ...dynamicFiles];
+            
             filesGrid.innerHTML = '';
             
-            files.forEach(file => {
+            allFiles.forEach(file => {
                 const fileElement = document.createElement('div');
                 fileElement.className = 'file-item';
                 fileElement.innerHTML = `
@@ -677,6 +763,7 @@ class AdvancedOSSimulator {
                 
                 if (file.type === 'folder') {
                     fileElement.addEventListener('click', () => {
+                        this.currentPath = file.name.toLowerCase();
                         renderFiles(file.name.toLowerCase());
                         appWindow.querySelector('#currentPath').textContent = file.name;
                     });
@@ -684,9 +771,10 @@ class AdvancedOSSimulator {
                 
                 filesGrid.appendChild(fileElement);
             });
-        }
+        };
 
         // Initialize with home
+        this.currentPath = 'home';
         renderFiles('home');
 
         // Handle sidebar navigation
@@ -701,6 +789,7 @@ class AdvancedOSSimulator {
                 link.classList.add('active');
                 
                 const path = link.dataset.path;
+                this.currentPath = path;
                 renderFiles(path);
                 appWindow.querySelector('#currentPath').textContent = link.textContent.trim();
             });
@@ -716,34 +805,60 @@ class AdvancedOSSimulator {
         newFolderBtn.addEventListener('click', () => {
             const folderName = prompt('Enter folder name:');
             if (folderName && folderName.trim()) {
-                const folderElement = document.createElement('div');
-                folderElement.className = 'file-item';
-                folderElement.innerHTML = `
-                    <div class="file-icon">
-                        <i class="fas fa-folder"></i>
-                    </div>
-                    <div class="file-name">${folderName}</div>
-                    <div class="file-size">--</div>
-                `;
-                filesGrid.appendChild(folderElement);
+                // Create folder object
+                const newFolder = {
+                    name: folderName,
+                    type: 'folder',
+                    icon: 'fas fa-folder',
+                    size: '--',
+                    path: this.currentPath,
+                    created: new Date().toISOString()
+                };
+                
+                // Add to file system
+                if (!this.fileSystem.has(this.currentPath)) {
+                    this.fileSystem.set(this.currentPath, []);
+                }
+                this.fileSystem.get(this.currentPath).push(newFolder);
+                
+                // Re-render files to show the new folder
+                renderFiles(this.currentPath);
+                
+                // Show success message
                 this.showToast(`Created folder: ${folderName}`, 'success');
+                
+                // Voice feedback with personality
+                this.speakWithPersonality(`Folder ${folderName} created successfully!`, 'friendly');
             }
         });
 
         newFileBtn.addEventListener('click', () => {
             const fileName = prompt('Enter file name:');
             if (fileName && fileName.trim()) {
-                const fileElement = document.createElement('div');
-                fileElement.className = 'file-item';
-                fileElement.innerHTML = `
-                    <div class="file-icon">
-                        <i class="fas fa-file"></i>
-                    </div>
-                    <div class="file-name">${fileName}</div>
-                    <div class="file-size">0 KB</div>
-                `;
-                filesGrid.appendChild(fileElement);
+                // Create file object
+                const newFile = {
+                    name: fileName,
+                    type: 'file',
+                    icon: 'fas fa-file',
+                    size: '0 KB',
+                    path: this.currentPath,
+                    created: new Date().toISOString()
+                };
+                
+                // Add to file system
+                if (!this.fileSystem.has(this.currentPath)) {
+                    this.fileSystem.set(this.currentPath, []);
+                }
+                this.fileSystem.get(this.currentPath).push(newFile);
+                
+                // Re-render files to show the new file
+                renderFiles(this.currentPath);
+                
+                // Show success message
                 this.showToast(`Created file: ${fileName}`, 'success');
+                
+                // Voice feedback with personality
+                this.speakWithPersonality(`File ${fileName} created successfully!`, 'friendly');
             }
         });
 
@@ -1711,7 +1826,7 @@ class AdvancedOSSimulator {
     addToTaskbar(appName, windowElement) {
         const taskbarApps = document.getElementById('taskbarApps');
         const taskbarApp = document.createElement('div');
-        taskbarApp.className = 'taskbar-app';
+        taskbarApp.className = 'taskbar-app glass';
         taskbarApp.setAttribute('data-app', appName);
         taskbarApp.innerHTML = `<i class="${this.getAppContent(appName).icon}"></i>`;
         
@@ -1784,12 +1899,28 @@ class AdvancedOSSimulator {
     updateClock() {
         const clock = document.getElementById('clock');
         const now = new Date();
-        const timeString = now.toLocaleTimeString('en-US', {
-            hour12: false,
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-        clock.textContent = timeString;
+        
+        // Update time
+        const timeElement = clock.querySelector('.time');
+        if (timeElement) {
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            timeElement.textContent = timeString;
+        }
+        
+        // Update date
+        const dateElement = clock.querySelector('.date');
+        if (dateElement) {
+            const dateString = now.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+            });
+            dateElement.textContent = dateString;
+        }
     }
 
     setupClockInterval() {
@@ -1914,69 +2045,72 @@ class AdvancedOSSimulator {
     loadCustomizationSettings() {
         const settings = JSON.parse(localStorage.getItem('osCustomization') || '{}');
         
+        // Load theme
         if (settings.colorScheme) {
-            document.getElementById('colorScheme').value = settings.colorScheme;
             this.applyTheme(settings.colorScheme);
         }
         
+        // Load animation speed
         if (settings.animationSpeed) {
             document.getElementById('animationSpeed').value = settings.animationSpeed;
             this.applyAnimationSpeed(settings.animationSpeed);
         }
         
+        // Load blur intensity
         if (settings.blurIntensity) {
             document.getElementById('blurIntensity').value = settings.blurIntensity;
             this.applyBlurIntensity(settings.blurIntensity);
+            this.updateBlurValue(settings.blurIntensity);
         }
         
+        // Load particle count
         if (settings.particleCount) {
             document.getElementById('particleCount').value = settings.particleCount;
             this.updateParticleCount(settings.particleCount);
+            this.updateParticleValue(settings.particleCount);
         }
         
+        // Load window opacity
         if (settings.windowOpacity) {
             document.getElementById('windowOpacity').value = settings.windowOpacity;
             this.applyWindowOpacity(settings.windowOpacity);
         }
         
+        // Load icon size
         if (settings.iconSize) {
             document.getElementById('iconSize').value = settings.iconSize;
             this.applyIconSize(settings.iconSize);
         }
         
+        // Load taskbar height
         if (settings.taskbarHeight) {
             document.getElementById('taskbarHeight').value = settings.taskbarHeight;
             this.applyTaskbarHeight(settings.taskbarHeight);
+            this.updateTaskbarValue(settings.taskbarHeight);
         }
         
-        if (settings.fontFamily) {
-            document.getElementById('fontFamily').value = settings.fontFamily;
-            this.applyFontFamily(settings.fontFamily);
-        }
+        // Setup real-time updates for range inputs
+        this.setupRangeInputs();
     }
 
     // Apply customization
     applyCustomization() {
         const settings = {
-            colorScheme: document.getElementById('colorScheme').value,
             animationSpeed: document.getElementById('animationSpeed').value,
             blurIntensity: document.getElementById('blurIntensity').value,
             particleCount: document.getElementById('particleCount').value,
             windowOpacity: document.getElementById('windowOpacity').value,
             iconSize: document.getElementById('iconSize').value,
-            taskbarHeight: document.getElementById('taskbarHeight').value,
-            fontFamily: document.getElementById('fontFamily').value
+            taskbarHeight: document.getElementById('taskbarHeight').value
         };
         
         // Apply each setting
-        this.applyTheme(settings.colorScheme);
         this.applyAnimationSpeed(settings.animationSpeed);
         this.applyBlurIntensity(settings.blurIntensity);
         this.updateParticleCount(settings.particleCount);
         this.applyWindowOpacity(settings.windowOpacity);
         this.applyIconSize(settings.iconSize);
         this.applyTaskbarHeight(settings.taskbarHeight);
-        this.applyFontFamily(settings.fontFamily);
         
         // Save to localStorage
         localStorage.setItem('osCustomization', JSON.stringify(settings));
@@ -1984,18 +2118,476 @@ class AdvancedOSSimulator {
         this.showToast('Customization applied successfully!', 'success');
         this.toggleCustomizationPanel();
     }
+    
+    // Setup theme selection
+    setupThemeSelection() {
+        const themeOptions = document.querySelectorAll('.theme-option');
+        themeOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const theme = option.dataset.theme;
+                this.applyTheme(theme);
+                
+                // Update active state
+                themeOptions.forEach(opt => opt.classList.remove('active'));
+                option.classList.add('active');
+                
+                this.showToast(`${theme.charAt(0).toUpperCase() + theme.slice(1)} theme applied!`, 'success');
+            });
+        });
+    }
+
+    // Setup search functionality
+    setupSearch() {
+        const searchInput = document.querySelector('.search-input');
+        if (!searchInput) return;
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            this.performSearch(query);
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const query = e.target.value.toLowerCase().trim();
+                if (query) {
+                    this.executeSearch(query);
+                }
+            }
+        });
+    }
+
+    // Perform search as user types
+    performSearch(query) {
+        if (!query) {
+            this.hideSearchResults();
+            return;
+        }
+
+        const results = this.searchApps(query);
+        this.showSearchResults(results, query);
+    }
+
+    // Execute search action
+    executeSearch(query) {
+        const results = this.searchApps(query);
+        if (results.length > 0) {
+            // Open the first result
+            const firstResult = results[0];
+            if (firstResult.type === 'app') {
+                this.openApp(firstResult.name);
+            } else if (firstResult.type === 'action') {
+                this.executeAction(firstResult.action);
+            }
+            this.hideSearchResults();
+        }
+    }
+
+    // Search through apps and actions
+    searchApps(query) {
+        const results = [];
+        
+        // Search through desktop apps
+        const desktopIcons = document.querySelectorAll('.desktop-icon');
+        desktopIcons.forEach(icon => {
+            const appName = icon.querySelector('.icon-label').textContent.toLowerCase();
+            if (appName.includes(query)) {
+                results.push({
+                    type: 'app',
+                    name: icon.dataset.app,
+                    displayName: icon.querySelector('.icon-label').textContent,
+                    icon: icon.querySelector('i').className,
+                    element: icon
+                });
+            }
+        });
+
+        // Search through start menu apps
+        const startMenuItems = document.querySelectorAll('.start-menu-item');
+        startMenuItems.forEach(item => {
+            const appName = item.querySelector('span').textContent.toLowerCase();
+            if (appName.includes(query)) {
+                const appNameAttr = item.dataset.app;
+                if (appNameAttr) {
+                    results.push({
+                        type: 'app',
+                        name: appNameAttr,
+                        displayName: item.querySelector('span').textContent,
+                        icon: item.querySelector('i').className,
+                        element: item
+                    });
+                } else if (item.dataset.action) {
+                    results.push({
+                        type: 'action',
+                        action: item.dataset.action,
+                        displayName: item.querySelector('span').textContent,
+                        icon: item.querySelector('i').className,
+                        element: item
+                    });
+                }
+            }
+        });
+
+        // Add system actions
+        const systemActions = [
+            { action: 'settings', displayName: 'Settings', icon: 'fas fa-cog' },
+            { action: 'wallpaper-gallery', displayName: 'Change Wallpaper', icon: 'fas fa-images' },
+            { action: 'customization', displayName: 'Personalization', icon: 'fas fa-palette' },
+            { action: 'voice-assistant', displayName: 'Voice Assistant', icon: 'fas fa-microphone' }
+        ];
+
+        systemActions.forEach(action => {
+            if (action.displayName.toLowerCase().includes(query)) {
+                results.push({
+                    type: 'action',
+                    action: action.action,
+                    displayName: action.displayName,
+                    icon: action.icon
+                });
+            }
+        });
+
+        return results.slice(0, 8); // Limit to 8 results
+    }
+
+    // Show search results
+    showSearchResults(results, query) {
+        this.hideSearchResults(); // Clear previous results
+
+        if (results.length === 0) {
+            this.showNoSearchResults(query);
+            return;
+        }
+
+        const searchBox = document.querySelector('.search-box');
+        if (!searchBox) return;
+
+        const resultsContainer = document.createElement('div');
+        resultsContainer.className = 'search-results glass';
+        resultsContainer.innerHTML = `
+            <div class="search-results-header">
+                <span>Search results for "${query}"</span>
+                <small>${results.length} result${results.length > 1 ? 's' : ''}</small>
+            </div>
+            <div class="search-results-list">
+                ${results.map(result => `
+                    <div class="search-result-item" data-type="${result.type}" data-name="${result.name || result.action}">
+                        <div class="result-icon">
+                            <i class="${result.icon}"></i>
+                        </div>
+                        <div class="result-info">
+                            <div class="result-name">${result.displayName}</div>
+                            <div class="result-type">${result.type === 'app' ? 'Application' : 'System Action'}</div>
+                        </div>
+                        <div class="result-action">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        // Add click handlers
+        resultsContainer.querySelectorAll('.search-result-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const result = results[index];
+                if (result.type === 'app') {
+                    this.openApp(result.name);
+                } else if (result.type === 'action') {
+                    this.executeAction(result.action);
+                }
+                this.hideSearchResults();
+            });
+        });
+
+        searchBox.appendChild(resultsContainer);
+    }
+
+    // Show no search results message
+    showNoSearchResults(query) {
+        const searchBox = document.querySelector('.search-box');
+        if (!searchBox) return;
+
+        const noResults = document.createElement('div');
+        noResults.className = 'search-no-results glass';
+        noResults.innerHTML = `
+            <div class="no-results-content">
+                <i class="fas fa-search fa-2x text-muted"></i>
+                <div class="no-results-text">
+                    <div>No results found for "${query}"</div>
+                    <small>Try different keywords or check spelling</small>
+                </div>
+            </div>
+        `;
+
+        searchBox.appendChild(noResults);
+    }
+
+    // Hide search results
+    hideSearchResults() {
+        const existingResults = document.querySelector('.search-results, .search-no-results');
+        if (existingResults) {
+            existingResults.remove();
+        }
+    }
+
+    // Execute system action
+    executeAction(action) {
+        switch (action) {
+            case 'settings':
+                this.openApp('settings');
+                break;
+            case 'wallpaper-gallery':
+                this.toggleWallpaperGallery();
+                break;
+            case 'customization':
+                this.toggleCustomizationPanel();
+                break;
+            case 'voice-assistant':
+                this.toggleVoiceAssistant();
+                break;
+            case 'shutdown':
+                this.shutdown();
+                break;
+        }
+    }
+
+    // Voice Assistant Setup
+    setupVoiceAssistant() {
+        // Check if speech synthesis is supported
+        if ('speechSynthesis' in window) {
+            this.speechSynthesis = window.speechSynthesis;
+            this.speechUtterance = null;
+            this.voiceAssistantEnabled = true;
+            
+            // Get available voices
+            this.loadVoices();
+            
+            // Listen for voice changes
+            this.speechSynthesis.addEventListener('voiceschanged', () => {
+                this.loadVoices();
+                // Speak welcome message after voices are loaded
+                setTimeout(() => {
+                    this.speakWelcomeMessage();
+                }, 1000);
+            });
+            
+            // If voices are already available, speak welcome message
+            if (this.speechSynthesis.getVoices().length > 0) {
+                setTimeout(() => {
+                    this.speakWelcomeMessage();
+                }, 2000);
+            }
+        } else {
+            this.voiceAssistantEnabled = false;
+            console.log('Speech synthesis not supported');
+        }
+    }
+
+    // Load available voices
+    loadVoices() {
+        if (this.speechSynthesis) {
+            this.availableVoices = this.speechSynthesis.getVoices();
+            
+            // Try to find a good English voice
+            this.selectedVoice = this.availableVoices.find(voice => 
+                voice.lang.startsWith('en') && voice.name.includes('Google')
+            ) || this.availableVoices.find(voice => 
+                voice.lang.startsWith('en')
+            ) || this.availableVoices[0];
+        }
+    }
+
+    // Speak welcome message
+    speakWelcomeMessage() {
+        if (!this.voiceAssistantEnabled || !this.selectedVoice) {
+            return;
+        }
+
+        // Get username from login or use default
+        const username = this.getCurrentUsername();
+        
+        // Create a more engaging welcome message
+        const welcomeMessages = [
+            `سلام ${username}! خوش آمدید به OsMj! 🎉`,
+            `Welcome ${username}! Your personal OS is ready to serve you! ✨`,
+            `مرحبا ${username}! OsMj آماده کمک به شماست! 🚀`,
+            `Hello ${username}! Let's make today amazing with OsMj! 🌟`
+        ];
+        
+        const welcomeMessage = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+
+        // Stop any current speech
+        if (this.speechSynthesis.speaking) {
+            this.speechSynthesis.cancel();
+        }
+
+        // Create new utterance with enhanced personality
+        this.speechUtterance = new SpeechSynthesisUtterance(welcomeMessage);
+        this.speechUtterance.voice = this.selectedVoice;
+        this.speechUtterance.rate = 0.85; // Slightly slower for clarity
+        this.speechUtterance.pitch = 1.1; // Slightly higher pitch for enthusiasm
+        this.speechUtterance.volume = 0.9;
+
+        // Add event listeners
+        this.speechUtterance.onstart = () => {
+            console.log('Voice assistant speaking:', welcomeMessage);
+            this.showToast('🎤 Voice assistant is speaking...', 'info');
+        };
+
+        this.speechUtterance.onend = () => {
+            console.log('Voice assistant finished speaking');
+            // Speak a follow-up message after a short delay
+            setTimeout(() => {
+                this.speakFollowUpMessage();
+            }, 2000);
+        };
+
+        this.speechUtterance.onerror = (event) => {
+            console.error('Voice assistant error:', event.error);
+        };
+
+        // Speak the message
+        this.speechSynthesis.speak(this.speechUtterance);
+    }
+
+    // Speak follow-up message
+    speakFollowUpMessage() {
+        if (!this.voiceAssistantEnabled || !this.selectedVoice) {
+            return;
+        }
+
+        const followUpMessages = [
+            "I'm here to help you navigate and use your OS effectively!",
+            "Feel free to ask me anything or use the start menu to explore!",
+            "Your desktop is ready with all the tools you need!",
+            "Let me know if you need assistance with any feature!"
+        ];
+        
+        const followUpMessage = followUpMessages[Math.floor(Math.random() * followUpMessages.length)];
+        
+        const utterance = new SpeechSynthesisUtterance(followUpMessage);
+        utterance.voice = this.selectedVoice;
+        utterance.rate = 0.9;
+        utterance.pitch = 1.0;
+        utterance.volume = 0.8;
+        
+        this.speechSynthesis.speak(utterance);
+    }
+
+    // Get current username
+    getCurrentUsername() {
+        // Try to get from localStorage (set during login)
+        const storedUsername = localStorage.getItem('osmj_username');
+        if (storedUsername) {
+            return storedUsername;
+        }
+        
+        // Default username
+        return 'admin';
+    }
+
+    // Speak custom message
+    speakMessage(message, options = {}) {
+        if (!this.voiceAssistantEnabled || !this.selectedVoice) {
+            return;
+        }
+
+        // Stop any current speech
+        if (this.speechSynthesis.speaking) {
+            this.speechSynthesis.cancel();
+        }
+
+        // Create new utterance
+        const utterance = new SpeechSynthesisUtterance(message);
+        utterance.voice = this.selectedVoice;
+        utterance.rate = options.rate || 0.9;
+        utterance.pitch = options.pitch || 1.1;
+        utterance.volume = options.volume || 0.9;
+
+        // Add event listeners for better user experience
+        utterance.onstart = () => {
+            console.log('Voice assistant speaking:', message);
+        };
+
+        utterance.onend = () => {
+            console.log('Voice assistant finished speaking');
+        };
+
+        utterance.onerror = (event) => {
+            console.error('Voice assistant error:', event.error);
+        };
+
+        // Speak the message
+        this.speechSynthesis.speak(utterance);
+    }
+
+    // Toggle voice assistant
+    toggleVoiceAssistant() {
+        if (this.voiceAssistantEnabled) {
+            if (this.speechSynthesis.speaking) {
+                this.speechSynthesis.cancel();
+                this.showToast('🎤 Voice assistant stopped', 'info');
+            } else {
+                const messages = [
+                    "Hello! I'm your personal AI assistant, ready to help you navigate OsMj! 🚀",
+                    "Hi there! I'm here to make your OS experience amazing! ✨",
+                    "Welcome! I'm your voice companion, ready to assist you! 🌟",
+                    "Greetings! Your AI assistant is at your service! 🎯"
+                ];
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                this.speakMessage(randomMessage);
+                this.showToast('🎤 Voice assistant activated', 'success');
+            }
+        } else {
+            this.showToast('Voice assistant not supported', 'warning');
+        }
+    }
+
+    // Add voice feedback for various actions
+    addVoiceFeedback(action, details = '') {
+        if (!this.voiceAssistantEnabled) return;
+        
+        const feedbackMessages = {
+            'app_opened': `Opening ${details}`,
+            'folder_created': `Folder ${details} created successfully!`,
+            'file_created': `File ${details} created successfully!`,
+            'theme_changed': `Theme changed to ${details}`,
+            'wallpaper_changed': `Wallpaper changed to ${details}`,
+            'system_action': details
+        };
+        
+        const message = feedbackMessages[action] || details;
+        if (message) {
+            setTimeout(() => {
+                this.speakMessage(message);
+            }, 500);
+        }
+    }
+
+    // Enhanced voice assistant with personality
+    speakWithPersonality(message, personality = 'friendly') {
+        if (!this.voiceAssistantEnabled || !this.selectedVoice) return;
+        
+        const personalities = {
+            'friendly': { rate: 0.9, pitch: 1.1, volume: 0.9 },
+            'professional': { rate: 0.85, pitch: 1.0, volume: 0.8 },
+            'enthusiastic': { rate: 0.95, pitch: 1.2, volume: 1.0 },
+            'calm': { rate: 0.8, pitch: 0.9, volume: 0.7 }
+        };
+        
+        const settings = personalities[personality] || personalities.friendly;
+        this.speakMessage(message, settings);
+    }
 
     // Reset customization
     resetCustomization() {
         const defaultSettings = {
-            colorScheme: 'default',
             animationSpeed: 'normal',
-            blurIntensity: 'medium',
-            particleCount: 20,
+            blurIntensity: 20,
+            particleCount: 30,
             windowOpacity: 'normal',
             iconSize: 'medium',
-            taskbarHeight: 60,
-            fontFamily: 'default'
+            taskbarHeight: 60
         };
         
         // Reset form values
@@ -2007,14 +2599,17 @@ class AdvancedOSSimulator {
         });
         
         // Apply default settings
-        this.applyTheme('default');
         this.applyAnimationSpeed('normal');
-        this.applyBlurIntensity('medium');
-        this.updateParticleCount(20);
+        this.applyBlurIntensity(20);
+        this.updateParticleCount(30);
         this.applyWindowOpacity('normal');
         this.applyIconSize('medium');
         this.applyTaskbarHeight(60);
-        this.applyFontFamily('default');
+        
+        // Update display values
+        this.updateBlurValue(20);
+        this.updateParticleValue(30);
+        this.updateTaskbarValue(60);
         
         // Clear localStorage
         localStorage.removeItem('osCustomization');
@@ -2032,6 +2627,53 @@ class AdvancedOSSimulator {
         }
         
         this.currentTheme = theme;
+    }
+    
+    // Setup range input real-time updates
+    setupRangeInputs() {
+        const blurInput = document.getElementById('blurIntensity');
+        const particleInput = document.getElementById('particleCount');
+        const taskbarInput = document.getElementById('taskbarHeight');
+        
+        if (blurInput) {
+            blurInput.addEventListener('input', (e) => {
+                this.updateBlurValue(e.target.value);
+            });
+        }
+        
+        if (particleInput) {
+            particleInput.addEventListener('input', (e) => {
+                this.updateParticleValue(e.target.value);
+            });
+        }
+        
+        if (taskbarInput) {
+            taskbarInput.addEventListener('input', (e) => {
+                this.updateTaskbarValue(e.target.value);
+            });
+        }
+    }
+    
+    // Update display values for range inputs
+    updateBlurValue(value) {
+        const blurValue = document.getElementById('blurValue');
+        if (blurValue) {
+            blurValue.textContent = value;
+        }
+    }
+    
+    updateParticleValue(value) {
+        const particleValue = document.getElementById('particleValue');
+        if (particleValue) {
+            particleValue.textContent = value;
+        }
+    }
+    
+    updateTaskbarValue(value) {
+        const taskbarValue = document.getElementById('taskbarValue');
+        if (taskbarValue) {
+            taskbarValue.textContent = value;
+        }
     }
 
     applyAnimationSpeed(speed) {
