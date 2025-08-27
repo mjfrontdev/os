@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Background Circle -->
+  <circle cx="128" cy="128" r="120" fill="url(#gradient)" stroke="#0078d4" stroke-width="8"/>
+  
+  <!-- Monitor Screen -->
+  <rect x="64" y="88" width="128" height="80" rx="8" fill="#ffffff" stroke="#0078d4" stroke-width="4"/>
+  
+  <!-- Monitor Stand -->
+  <rect x="120" y="168" width="16" height="24" fill="#0078d4"/>
+  <rect x="108" y="192" width="40" height="8" rx="4" fill="#0078d4"/>
+  
+  <!-- Windows Icon -->
+  <rect x="80" y="104" width="16" height="16" fill="#0078d4" rx="2"/>
+  <rect x="104" y="104" width="16" height="16" fill="#0078d4" rx="2"/>
+  <rect x="128" y="104" width="16" height="16" fill="#0078d4" rx="2"/>
+  <rect x="152" y="104" width="16" height="16" fill="#0078d4" rx="2"/>
+  
+  <!-- App Icons -->
+  <circle cx="88" cy="136" r="6" fill="#ff6b6b"/>
+  <circle cx="112" cy="136" r="6" fill="#4ecdc4"/>
+  <circle cx="136" cy="136" r="6" fill="#45b7d1"/>
+  <circle cx="160" cy="136" r="6" fill="#96ceb4"/>
+  
+  <!-- Gradient Definition -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>
